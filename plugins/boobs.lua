@@ -40,11 +40,11 @@ end
 local function run(msg, matches)
   local url = nil
   
-  if matches[1] == "!mame" then
+  if matches[1] == "!boobs" then
     url = getRandomBoobs()
   end
 
-  if matches[1] == "!kun" then
+  if matches[1] == "!butts" then
     url = getRandomButts()
   end
 
@@ -52,19 +52,19 @@ local function run(msg, matches)
     local receiver = get_receiver(msg)
     send_photo_from_url(receiver, url)
   else
-    return 'Error getting mame/kun for you, please try again later.' 
+    return 'Error getting boobs/butts for you, please try again later.' 
   end
 end
 
 return {
   description = "عکس های تصادفی از ممه و کون را بگیر", 
   usage = {
-    "!mame: عکس های ممه را بگیر "
-    "!kun: عکس های ممه را بگیر "
+    "!boobs: عکس های ممه را بگیر "
+    "!butts: عکس های کون را بگیر "
   },
   patterns = {
-    "^!mame$",
-    "^!kun$"
+    "^!boobs$",
+    "^!butts$"
   }, 
   run = run 
 }
