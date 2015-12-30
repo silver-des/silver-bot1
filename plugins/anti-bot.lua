@@ -93,15 +93,12 @@ local function run (msg, matches)
 end
 
 return {
-  description = 'دستورات گروه درباره ی آوردن رباتی دیگر.',
+  description = 'When bot enters group kick it.',
   usage = {
-  '!antibot enable:آمدن ربات به گروه را مجاز کنید '
-    
-    '!antibot disable: آمدن ربات را برای گروه مجاز کنید',
-    
-    '!antibot allow <botId>: اجازه دهید ربات ( ای دی ربات ) به گروه وارد شود',
-    
-    '!antibot disallow <botId>: اجازه ندهید ربات ( ای دی ربات ) به گروه وارد شود'
+    '!antibot enable: Enable Anti-bot on current chat',
+    '!antibot disable: Disable Anti-bot on current chat',
+    '!antibot allow <botId>: Allow <botId> on this chat',
+    '!antibot disallow <botId>: Disallow <botId> on this chat'
   },
   patterns = {
     '^!antibot (allow) (%d+)$',
