@@ -1,10 +1,10 @@
 local doc = [[
 	!time <location>
-	Returns the time, date, and timezone for the given location.
+	به شما روز و ساعت آن کشور را میدهد 
 ]]
 
 local triggers = {
-	'^!time[@'..bot.username..']*'
+	'^/time[@'..bot.username..']*'
 }
 
 local action = function(msg)
