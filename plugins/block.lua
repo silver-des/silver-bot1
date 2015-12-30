@@ -25,7 +25,6 @@ local function run(msg, matches)
 end
  
 return {
-  usage: " شخصی را به از ایدی ربات بلاک کن " 
   patterns = {
     "^!block (user) (%d+)$",
   },
