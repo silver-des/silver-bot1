@@ -1,20 +1,44 @@
-do
+local function callback(extra, success, result)
+  if success then
+    print('File downloaded to:', result)
+  else
+    print('Error downloading: '..extra)
+  end
+end
 
-function run(msg, matches)
-  local url = matches[1]
-  local receiver = get_receiver(msg)
-  send_photo_from_url(receiver, url)
+local function run(msg, matches)
+  if msg.media then
+    if msg.media.type == 'document' then
+      load_document(msg.id, callback, msg.id)
+    end
+    if msg.media.type == 'photo' then
+      load_photo(msg.id, callback, msg.id)
+    end
+    if msg.media.type == 'video' then
+      load_video(msg.id, callback, msg.id)
+    end
+    if msg.media.type == 'audio' then
+      load_audio(msg.id, callback, msg.id)
+    end
+  end
+end
+
+local function pre_process(msg)
+  if not msg.text and msg.media then
+    msg.text = '['..msg.media.type..']'
+  end
+  return msg
 end
 
 return {
-  description = "When user sends image URL (ends with png, jpg, jpeg) download and send it to origin.", 
-  usage = "وقتی شخصی لینکی را میدهد که دارای عمس است ربات آنرا دانلود و در گروه پس میدهد . از فرمت های (ends with png, jpg, jpeg) پشتیبانی میکند ",
+  description = "When bot receives a media msg, download the media.",
+  usage = "برای دانلود کردن عکس از لینک",
+  run = run,
   patterns = {
-    "(https?://[%w-_%.%?%.:/%+=&]+%.png)$",
-    "(https?://[%w-_%.%?%.:/%+=&]+%.jpg)$",
-    "(https?://[%w-_%.%?%.:/%+=&]+%.jpeg)$",
-  }, 
-  run = run 
+    '%[(document)%]',
+    '%[(photo)%]',
+    '%[(video)%]',
+    '%[(audio)%]'
+  },
+  pre_process = pre_process
 }
-
-end
