@@ -2,8 +2,13 @@ do
 
 function run(msg, matches)
   return 'Merbot '.. VERSION .. [[ 
-  Checkout http://git.io/v4Oi0
-  GNU GPL v2 license.]]
+این ربات توسط @creed_is_dead ساخته شده است.
+نرخ هر گروه 2 تومن هست و با امکانات کامل و جالب.
+Creedbot v1.4
+supp :
+@aria_creed
+@sorblack_creed
+@amircc_creed
 end
 
 return {
