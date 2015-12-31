@@ -1,53 +1,100 @@
-local doc = [[
-	!time <location>
-	به شما روز و ساعت آن کشور را میدهد 
-]]
+-- Implement a command !time [area] which uses
+-- 2 Google APIs to get the desired result:
+--  1. Geocoding to get from area to a lat/long pair
+--  2. Timezone to get the local time in that lat/long location
 
-local triggers = {
-	'^/time[@'..bot.username..']*'
-}
+-- Globals
+-- If you have a google api key for the geocoding/timezone api
+api_key  = nil
 
-local action = function(msg)
+base_api = "https://maps.googleapis.com/maps/api"
+dateFormat = "%A %d %B - %H:%M:%S"
 
-	local input = msg.text:input()
-	if not input then
-		if msg.reply_to_message and msg.reply_to_message.text then
-			input = msg.reply_to_message.text
-		else
-			sendReply(msg, doc)
-			return
-		end
-	end
+-- Need the utc time for the google api
+function utctime()
+  return os.time(os.date("!*t"))
+end
 
-	local coords = get_coords(input)
-	if type(coords) == 'string' then
-		sendReply(msg, coords)
-		return
-	end
+-- Use the geocoding api to get the lattitude and longitude with accuracy specifier
+-- CHECKME: this seems to work without a key??
+function get_latlong(area)
+  local api      = base_api .. "/geocode/json?"
+  local parameters = "address=".. (URL.escape(area) or "")
+  if api_key ~= nil then
+    parameters = parameters .. "&key="..api_key
+  end
 
-	local url = 'https://maps.googleapis.com/maps/api/timezone/json?location=' .. coords.lat ..','.. coords.lon .. '&timestamp='..os.time()
+  -- Do the request
+  local res, code = https.request(api..parameters)
+  if code ~=200 then return nil  end
+  local data = json:decode(res)
+ 
+  if (data.status == "ZERO_RESULTS") then
+    return nil
+  end
+  if (data.status == "OK") then
+    -- Get the data
+    lat  = data.results[1].geometry.location.lat
+    lng  = data.results[1].geometry.location.lng
+    acc  = data.results[1].geometry.location_type
+    types= data.results[1].types
+    return lat,lng,acc,types
+  end
+end
 
-	local jstr, res = HTTPS.request(url)
-	if res ~= 200 then
-		sendReply(msg, config.errors.connection)
-		return
-	end
+-- Use timezone api to get the time in the lat,
+-- Note: this needs an API key
+function get_time(lat,lng)
+  local api  = base_api .. "/timezone/json?"
 
-	local jdat = JSON.decode(jstr)
+  -- Get a timestamp (server time is relevant here)
+  local timestamp = utctime()
+  local parameters = "location=" ..
+    URL.escape(lat) .. "," ..
+    URL.escape(lng) .. 
+    "&timestamp="..URL.escape(timestamp)
+  if api_key ~=nil then
+    parameters = parameters .. "&key="..api_key
+  end
 
-	local timestamp = os.time() + jdat.rawOffset + jdat.dstOffset + config.time_offset
-	local utcoff = (jdat.rawOffset + jdat.dstOffset) / 3600
-	if utcoff == math.abs(utcoff) then
-		utcoff = '+' .. utcoff
-	end
-	local message = os.date('%I:%M %p\n', timestamp) .. os.date('%A, %B %d, %Y\n', timestamp) .. jdat.timeZoneName .. ' (UTC' .. utcoff .. ')'
+  local res,code = https.request(api..parameters)
+  if code ~= 200 then return nil end
+  local data = json:decode(res)
+  
+  if (data.status == "ZERO_RESULTS") then
+    return nil
+  end
+  if (data.status == "OK") then
+    -- Construct what we want
+    -- The local time in the location is:
+    -- timestamp + rawOffset + dstOffset
+    local localTime = timestamp + data.rawOffset + data.dstOffset
+    return localTime, data.timeZoneId
+  end
+  return localTime
+end
 
-	sendReply(msg, message)
+function getformattedLocalTime(area)
+  if area == nil then
+    return "The time in nowhere is never"
+  end
 
+  lat,lng,acc = get_latlong(area)
+  if lat == nil and lng == nil then
+    return 'It seems that in "'..area..'" they do not have a concept of time.'
+  end
+  local localTime, timeZoneId = get_time(lat,lng)
+
+  return "The local time in "..timeZoneId.." is: ".. os.date(dateFormat,localTime) 
+end
+
+function run(msg, matches)
+  return getformattedLocalTime(matches[1])
 end
 
 return {
-	action = action,
-	triggers = triggers,
-	doc = doc
+  description = "Displays the local time in an area", 
+  usage = "!time [area]: Displays the local time in that area",
+  patterns = {"^!time (.*)$"}, 
+  run = run
 }
