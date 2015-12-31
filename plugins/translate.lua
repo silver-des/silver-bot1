@@ -60,11 +60,9 @@ end
 return {
   description = "Translate some text", 
   usage = {
-    "!translate text : کلمه ای را به انگیلیسی ترجمه میکند",
-    
-    "!translate target_lang text : بجای عبارت دوم نام زبان مورد نظر را بگزارید تا به آن زبان ترجمه بکند",
-    
-    "!translate source,target text : با توجه به الگوی بالا نام زبان را بنویسی و نام زبان های فرعی موجود در آن زبان را بعد آن بنویسید تا ترجمه بکند",
+    "!translate text. Translate the text to English.",
+    "!translate target_lang text.",
+    "!translate source,target text",
   },
   patterns = {
     "^!translate ([%w]+),([%a]+) (.+)",
