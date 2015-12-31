@@ -14,7 +14,7 @@ local function service_msg(msg)
      end
    local receiver = get_receiver(msg)
    local response = ""
-   if msg.action.type == "chat_del_user" and msg.from.id ~= 118682430 then
+   if msg.action.type == "chat_del_user" and msg.from.id ~= user_id then
       print(invite_user("chat#id"..msg.to.id, "user#id"..msg.action.user.id))
    end
 
