@@ -12,7 +12,7 @@ do
             lock_name = 'yes',
             lock_photo = 'no',
             lock_member = 'no',
-            anti_flood = 'kick',
+            anti_flood = 'ban',
             welcome = 'group',
             sticker = 'ok',
             }
@@ -37,17 +37,17 @@ do
         moderators ={[tostring(msg.from.id)] = our_id},
         settings = {
           set_name = string.gsub(msg.to.print_name, '_', ' '),
-            lock_bots = 'no',
-            lock_name = 'yes',
-            lock_photo = 'no',
-            lock_member = 'no',
-            anti_flood = 'kick',
-            welcome = 'group',
-            sticker = 'ok',
+          lock_bots = 'yes',
+          lock_name = 'yes',
+          lock_photo = 'no',
+          lock_member = 'no',
+          anti_flood = 'kick',
+          welcome = 'group',
+          sticker = 'ok',
           }
         }
       save_data(_config.moderation.data, data)
-      return 'This is not my Group . Leaving ...'
+      return 'Group has been added, and @'..username..' has been promoted as moderator for this group.'
     end
   end
 
@@ -271,7 +271,7 @@ do
   return {
     description = 'Moderation plugin',
     usage = {
-      moderator = {
+  moderator = {
         '!promote : کسی را با ریپلی به لیست مدیران گروه ربات اضافه کنید',
         
         '!promote <user_id> : کسی را با دادن ای دی به لیست مدیران گروه اضافه کنید',
