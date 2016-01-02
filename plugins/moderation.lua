@@ -37,17 +37,11 @@ do
         moderators ={[tostring(msg.from.id)] = our_id},
         settings = {
           set_name = string.gsub(msg.to.print_name, '_', ' '),
-          lock_bots = 'yes',
-          lock_name = 'yes',
-          lock_photo = 'no',
-          lock_member = 'no',
-          anti_flood = 'kick',
-          welcome = 'group',
-          sticker = 'ok',
+          lock_member = 'yes',
           }
         }
       save_data(_config.moderation.data, data)
-      return 'Group has been added, and @'..username..' has been promoted as moderator for this group.'
+      return 'This is not my Group . Leaving ...'
     end
   end
 
