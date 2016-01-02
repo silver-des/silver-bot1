@@ -12,7 +12,7 @@ do
             lock_name = 'yes',
             lock_photo = 'no',
             lock_member = 'no',
-            anti_flood = 'ban',
+            anti_flood = 'kick',
             welcome = 'group',
             sticker = 'ok',
             }
@@ -37,7 +37,13 @@ do
         moderators ={[tostring(msg.from.id)] = our_id},
         settings = {
           set_name = string.gsub(msg.to.print_name, '_', ' '),
-          lock_member = 'yes',
+            lock_bots = 'no',
+            lock_name = 'yes',
+            lock_photo = 'no',
+            lock_member = 'no',
+            anti_flood = 'kick',
+            welcome = 'group',
+            sticker = 'ok',
           }
         }
       save_data(_config.moderation.data, data)
