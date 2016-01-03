@@ -1,14 +1,13 @@
 do
 
 function run(msg, matches)
-  return 'Merbot '.. VERSION .. [[ 
-این ربات توسط @creed_is_dead ساخته شده است.
-نرخ هر گروه 2 تومن هست و با امکانات کامل و جالب.
-Creedbot v1.4
-supp :
-@aria_creed
-@sorblack_creed
-@amircc_creed
+  return 'SilVeR-BoT '.. VERSION .. [[ 
+This IS Old BoT OF Telegram.
+
+This Bot Create By:
+@Mr_SilVeR1
+
+This Is BoT BesT BoT
 end
 
 return {
